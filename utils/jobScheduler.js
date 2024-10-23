@@ -32,6 +32,7 @@ const sendAlertEmail = async(userEmail, currentTemp, thresholdTemperature) => {
 const sendAlert = async ( temperature,city) => {
   try {
     const data=await getAlertList(temperature,city);
+    console.log(data);
     
     if(!data.length)return;
     for(const it of data){

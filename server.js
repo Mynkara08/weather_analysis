@@ -11,7 +11,7 @@ const PORT = process.env.PORT||8080;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
-setInterval(weatherScheduler,600*1000);
+setInterval(weatherScheduler,600000);
 app.use('/',alertRoute);
 app.use('/',weatherRoute);
 app.listen(PORT,'0.0.0.0',()=>{
