@@ -41,8 +41,8 @@ const saveOrUpdate = async (weather) => {
   }
 };
 
-const getTemperatureStatsInDateRange = async (startDate, endDate, city) =>{
-    const query =  `
+const getTemperatureStatsInDateRange = async (startDate, endDate, city) => {
+  const query = `
     SELECT
         to_char(to_timestamp(timestamp), 'YYYY-MM-DD') AS day,
         MIN(temperature) AS min_temperature,
@@ -60,18 +60,65 @@ const getTemperatureStatsInDateRange = async (startDate, endDate, city) =>{
         day;
 `;
 
-    try {
-        const values = [startDate, endDate, city];
-        const result = await pool.query(query, values);
-        return result.rows;
-    } catch (error) {
-        console.error("Error fetching temperature data:", error);
-        throw error;
-    }
-}
+  try {
+    const values = [startDate, endDate, city];
+    const result = await pool.query(query, values);
+    return result.rows;
+  } catch (error) {
+    console.error("Error fetching temperature data:", error);
+    throw error;
+  }
+};
+
+const getAllAlerts = async () => {
+  const query = `SELECT * FROM alerts;`;
+  try {
+    const result = await pool.query(query);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const removeAlert = async (id) => {
+  const query = `DELETE FROM alerts WHERE id=$1;`;
+  try {
+    const result = await pool.query(query, [id]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getAlertList = async (temperature, city) => {
+  const query = `SELECT email FROM alerts WHERE thresold<$1 AND city=$2;`;
+  try {
+    const result = await pool.query(query, [temperature, city]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const createAlert = async (thresold, email, city) => {
+  const query = `
+INSERT INTO alerts (thresold, email, city)
+VALUES ($1, $2, $3);
+`;
+  try {
+    const result = await pool.query(query, [thresold, email, city]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   findMinMaxAvgtemperatureByTimestamp,
   saveOrUpdate,
   getTemperatureStatsInDateRange,
+  getAllAlerts,
+  getAlertList,
+  removeAlert,
+  createAlert,
 };
