@@ -91,7 +91,7 @@ const removeAlert = async (id) => {
 };
 
 const getAlertList = async (temperature, city) => {
-  const query = `SELECT email FROM alerts WHERE thresold<$1 AND city=$2;`;
+  const query = `SELECT * FROM alerts WHERE thresold<$1 AND city=$2;`;
   try {
     const result = await pool.query(query, [temperature, city]);
     return result.rows;
